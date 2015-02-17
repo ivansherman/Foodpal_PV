@@ -1,0 +1,57 @@
+.content
+  .post
+    - if @orders.count > 0
+
+      %h1
+        = "\"" + @location.restaurant.name + "\""
+        Orders
+      %table.table
+        %tr
+          %th #
+          %th Date
+          %th Total Price
+          %th Delivery Method
+          %th Payment Method
+          %th Transaction ID
+          %th Delivery Date
+          %th Delivery Time
+          %th Status
+          %th
+
+        - @orders.each do |o|
+
+          %tr.clickable{"data-id" => o.id, style: "background: " + o.status.color + "; "}
+            %td{class: "id"}
+              = o.id
+            %td
+              = o.created_at.strftime("%m/%d/%Y \n\rat %I:%M %p ")
+            %td
+              = o.totalprice
+            %td
+              = o.delivery_type ? "Delivery" : "Pick Up"
+            %td
+              = o.payment_method ? "Cash" : "Card"
+            %td
+              = o.transaction_id
+
+            %td
+              = o.delivery_date
+            %td
+              = o.delivery_time
+
+            %td
+              = o.status.title
+              -#= link_to o.name, "#", class: "restaurant_#{r.id}", "data-value" => r.id
+              -#:javascript
+              -#  $(document).on("click", ".restaurant_#{r.id}", function(e) {
+              -#      val = $(this).data("value");
+              -#
+              -#      editRestaurant(val);
+              -#
+              -#      return false;
+              -#  });
+            %td
+
+      = will_paginate @restaurants, renderer: BootstrapPagination::Rails
+    - else
+      %h1 No Any Orders Yet

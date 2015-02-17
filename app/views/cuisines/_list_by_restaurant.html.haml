@@ -1,0 +1,32 @@
+- if @restaurant.cuisines.count > 0
+  - @restaurant.cuisines.each do |c|
+    %span.label.label-primary.get{"data-id" => c.id}
+      = c.name
+
+%span.label.label-default.add
+  %span
+    +
+
+#addCuisine.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      - @cuisine = Cuisine.new
+      = form_for @cuisine, url: "/cuisines/create", :html => { :id => "cuisineAddForm" } do |form|
+        .modal-header
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+          %h4#myModalLabel.modal-title Add Cuisine
+        .modal-body{style: "max-height: 414px;overflow: auto;"}
+          .writing.cuisine
+            %img(src="/assets/writing.gif" ){style: "margin: 0 auto"}
+
+          .form
+            = form.text_field :name, class: "white required"
+            = form.hidden_field :restaurant_id, :value => @restaurant.id.to_s
+
+        .modal-footer
+          = form.submit "Add Cuisine", class: "btn btn-success"
+
+        :javascript
+          $(document).ready(function(){
+            $('#cuisineAddForm').validate();
+          })

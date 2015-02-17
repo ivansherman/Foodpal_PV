@@ -1,0 +1,22 @@
+- if restaurant.comments.count == 0
+  .row.comment-item
+    .content
+      %h1
+        No Reviews
+
+- restaurant.comments.each do |comment|
+  .row.comment-item
+    .logo
+      - if (comment.user.image)
+        - img = comment.user.image.to_s
+        - logo = File.exist?(Rails.root.join('public', 'images', img))  ? "/images/" + img : "/assets/imagenotavailable.png"
+      - else
+        - logo = "/assets/imagenotavailable.png"
+      %img(src="#{logo}" )
+    .content
+      %h1
+        = comment.user.name
+      %span
+        = comment.created_at.strftime("%m/%d/%Y at %I:%M %p ")
+      %p
+        = comment.comment

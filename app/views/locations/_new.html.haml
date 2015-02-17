@@ -1,0 +1,57 @@
+- path = @location.id ?  "/locations/update" : "/locations/create"
+= form_for @location, url: path, :html => { :id => "locationsAddForm" } do |form|
+  .field
+    = form.label :address
+    = form.text_field :address, class: "white required"
+  .field
+    .row
+      .col-xs-6
+        = label_tag "State"
+        #state.styled-select
+          = collection_select(:state, :id, State.all, :id, :state)
+      .col-xs-6
+        = label_tag "City"
+        #city.styled-select{style: "display: none"}
+          = collection_select(:location, :city_id, [], :id, :city)
+  .field
+    .row
+      .col-xs-6
+        = form.label :zip
+        = form.text_field :zip, style: "width: 100%", class: "white"
+      .col-xs-6
+        = form.label :phone
+        = form.text_field :phone, style: "width: 100%", class: "white"
+
+
+  .field
+    .row
+      .col-xs-6
+        = form.label :delivery_fee
+        = form.text_field :delivery_fee, class: "white number"
+      .col-xs-6
+        = form.label :delivery_time
+        = form.text_field :delivery_time, class: "white"
+
+    .row
+      .col-xs-6
+        = form.label :latitude
+        = form.text_field :latitude, class: "white required number"
+      .col-xs-6
+        = form.label :longitude
+        = form.text_field :longitude, class: "white required number"
+
+  -#.field
+  -#  = label_tag "autocomplete"
+  -#  = text_field_tag "autocomplete"
+
+  - if @location.id
+    = hidden_field_tag "location[id]", @location.id
+  = form.hidden_field :restaurant_id, :value => restaurant.id.to_s
+  %div
+    = form.submit "Save", class: "btn btn-success", dtyle: "fload: right"
+
+:javascript
+  $(document).ready(function(){
+    $('#locationsAddForm').validate();
+  })
+

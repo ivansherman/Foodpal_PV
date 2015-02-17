@@ -1,0 +1,59 @@
+.content
+  .post#edit
+    - if @user
+      = form_for @user, url: "/users/update_user",  :html => { :multipart => true }  do |form|
+        .row{style: "margin: 0"}
+          .col-xs-5
+            %h1
+              Edit
+              = @user.name
+          .col-xs-2
+            = form.submit "Save Changes", class: "btn btn-success"
+            = hidden_field_tag "user[id]", @user.id
+
+        %table
+          %tr
+            %td
+              = image_tag @user.avatar.url(:thumb)
+              = form.file_field  :avatar
+            %td
+              - if @user.id != current_user.id
+                = form.label :role
+                = form.select "role_ids", options_from_collection_for_select(@roles, "id", "name", (@user.roles.first.id if @user.roles.first)), include_blank: true, :class => "simple"
+          %tr
+            %td
+              = form.label :name
+              = form.text_field :name, :class => "white"
+            %td
+              = form.label :login
+              = form.text_field :login, :class => "white"
+          %tr
+            %td
+              = form.label :email
+              = form.text_field :email, :class => "white"
+            %td
+              = form.label :phone
+              = form.text_field :phone, :class => "white"
+          %tr
+            %td
+
+              -##country
+              -#  = collection_select(:country, :id, Country.all, :id, :short_name)
+              = label_tag "State"
+              #state.styled-select
+                = collection_select(:state, :id, State.all, :id, :state)
+            %td
+              = label_tag "City"
+              #city.styled-select{style: "display: none"}
+                = collection_select(:address, :city_id, [], :id, :city)
+
+            %tr
+              %td
+                = fields_for @user.address do |a|
+                  = a.label :address
+                  = a.text_field :address, :class => "white"
+
+          %tr
+            %td
+
+

@@ -1,0 +1,41 @@
+= form_for @product, url: "/products/create", :html => { :id => "addProductForm" } do |form|
+  - if @product.errors.empty?
+    - @product.errors.messages.each do |key, mes|
+      = key
+      \:
+      = mes
+
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4#myModalLabel.modal-title Add Product
+  .modal-body{style: "max-height: 414px;overflow: auto;"}
+    .writing.gallery
+      %img(src="/assets/writing.gif" ){style: "margin: 0 auto"}
+    .form
+      .field
+        = form.label :name
+        = form.text_field :name, class: "required"
+        = form.hidden_field :menu_id, :value => menu.id.to_s if menu.id
+
+        = form.hidden_field :id, :value => @product.id.to_s if @product
+
+      .field
+        = form.label :description
+        = form.text_area :description
+
+      .field
+        = form.label :price
+        = form.text_field :price, class: "required"
+
+      .field
+        = image_tag @product.image.url(:thumb)
+        = form.label :image
+        = form.file_field :image, class: ""
+
+  .modal-footer
+    = form.submit "Add Product", class: "btn btn-success", "data-id" => menu.id
+
+  :javascript
+    $(document).ready(function(){
+      $('#addMenuForm').validate();
+    })

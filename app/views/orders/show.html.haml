@@ -1,0 +1,115 @@
+.content
+  .post.order_info
+    -color =  (@order.status)? @order.status.color : ''
+    .card{style: "color: #{color}; border: 5px dotted #{color}"}
+      = @order.status.title if @order.status
+    %table
+      %tr
+        %td
+          = image_tag @location.restaurant.image.url(:medium)
+        %td
+          %h1
+            = @location.restaurant.name
+          %h2
+            = @location.city.state.state + ", " + @location.city.city + " " + @location.zip.to_s + ", " + @location.address if @location.city
+
+    - if  @location.my_restaurant(current_user)
+      %fieldset.fieldset
+        %legend Order Status
+        - statuses = Status.all
+        = select_tag "status", options_from_collection_for_select(statuses, "id", "title", @order.status.id), class: "custom-dropdown", "data-id" => @order.id
+
+    %fieldset.fieldset
+      %legend Customer Info
+      = image_tag @order.user.avatar.url(:thumb), class: "avatar"
+      %table
+        %tr
+          %th
+            Customer Name:
+          %td
+            = @order.user.name
+        %tr
+          %th
+            Delivery Address:
+          %td
+            = @order.address
+        %tr
+          %th
+            Customer Phone:
+          %td
+            = @order.phone
+
+    %fieldset.fieldset
+      %legend Delivery Instructions
+      %table
+        %tr
+          %th Send plastic utensils and paper napkins
+          %td
+            = @order.napkins ? "No" : "Yes"
+        %tr
+          %th Send condiments (such as ketchup, salt & pepper packets)
+          %td
+            = @order.condiments ? "No" : "Yes"
+
+        %tr
+          %th Delivery date and time
+          %td
+            = @order.delivery_date + " At " + @order.delivery_time
+
+        %tr
+          %th Delivery Method
+          %td
+            = @order.delivery_type ? "Pick Up" : "Delivery"
+
+    %fieldset.fieldset
+      %legend Payment Info
+      %table
+        %tr
+          %th Payment Method
+          %td
+            = @order.payment_method ? "Cash" : "Credit Card"
+        - if  !@order.payment_method
+          %tr
+            %th Tansaction Id
+            %td
+              = @order.transaction_id
+
+    %fieldset.fieldset
+      %legend Products
+      %table.products
+        %tr
+          %th
+          %th Item Title
+          %th Quantity
+          %th Summary Price $
+          %th
+        - @order.order_items.each do |item|
+          %tr
+            %td
+              = image_tag item.product.image.url(:thumb)
+            %td
+              = item.product.name
+            %td
+              = item.count
+            %td
+              = "$" + (item.product.price.to_f * item.count.to_f).to_s
+        %tr
+          %td
+          %td
+          %td
+          %td
+            Delivery:
+            = @order.delivery_type ? "$" + @location.delivery_fee.to_s : "$0.00"
+            %br
+            %br
+            Summary:
+            %b
+              = "$" + @order.totalprice
+
+
+
+
+
+
+
+

@@ -1,0 +1,43 @@
+.content
+  = link_to "Add new post", new_blog_path, style: "float: right", class: "btn btn-info" if can? :manage, Blog
+  - @blogs.each do |blog|
+    .post.dotted
+      %h1
+        = link_to blog.title, blog_path(blog)
+      %h6
+        = blog.created_at.strftime("%m/%d/%Y at %I:%M %p ")
+        %h6
+          From:
+          %span
+            = blog.user.name if blog.user
+      .article
+        - text = Nokogiri::HTML(blog.text)
+        - img = text.xpath("//img").first
+        - img.set_attribute("style", "") if img
+        = raw img
+        = strip_tags(blog.text.truncate(512))
+        = link_to "Read More", blog_path(blog), class: "more"
+
+      .green-bottom{style: "width: 50%; clear: both; padding: 0 10px 10px 40px"}
+        = blog.comments.count
+        comment(s)
+        %br
+        Recommend this on
+
+        / AddThis Button BEGIN
+        .addthis_toolbox.addthis_default_style.addthis_32x32_style{"addthis:url" => blog_url(blog)}
+          %a.addthis_button_facebook
+          %a.addthis_button_twitter
+          %a.addthis_button_google_plusone_share
+          %a.addthis_button_linkedin
+          %a.addthis_button_myspace
+          %a.addthis_button_wordpress
+          %a.addthis_button_compact
+          %a.addthis_counter.addthis_bubble_style
+        :javascript
+          //var addthis_config = {"data_track_addressbar":true};
+        %script{src: "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-52d7982d756c925d", type: "text/javascript"}
+        / AddThis Button END
+
+
+  = will_paginate @blogs, renderer: BootstrapPagination::Rails

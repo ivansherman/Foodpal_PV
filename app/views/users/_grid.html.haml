@@ -1,0 +1,19 @@
+-#- show_filters: :when_filtered
+=  grid(@tasks_grid, show_filters: :when_filtered, allow_showing_all_records:  false) do |g|
+  - g.column name:  '#', attribute: 'id'
+  - g.column name:  'Name', attribute: 'name' do |task|
+    - link_to(task.name,users_user_edit_path({id: task}))
+  - g.column :name => "Email", attribute: 'email'
+
+  - g.column :name => "Role", attribute: "name", model: "Role", custom_filter: %w(Admin Customer User) do |task|
+    -#- custom_filter: Role.to_dropdown do |task|
+    - task.roles.collect{|role| role.name}.to_sentence
+
+  - g.column name:  '' do |task|
+    - raw "<div>
+    - <span class=\"label label-primary\">Restaurants: #{task.restaurants.count}</span>
+    - <span class=\"label label-success\">Blogs: #{task.blogs.count}</span>
+    - <span class=\"label label-default\">Orders: #{task.orders.count}</span>
+    - </div>"
+
+  - g.blank_slate content_tag(:div, "No restourants found", class: 'well')

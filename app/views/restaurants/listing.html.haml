@@ -1,0 +1,45 @@
+.content
+  #restaurant_list
+    - @restaurants.each do |restaurant|
+      .foodline.post
+        .row{style: "margin: 0"}
+          .col-xs-2
+            - if (restaurant.logo)
+              - img = restaurant.logo.to_s
+              - logo = File.exist?(Rails.root.join('public', 'images', img))  ? "/images/" + img : "/assets/imagenotavailable.png"
+            - else
+              - logo = "/assets/imagenotavailable.png"
+
+            %img(src=logo )
+          .col-xs-9
+            .row
+              .col-xs-9
+                %h1
+                  = restaurant.name
+              .col-xs-2
+                - r = restaurant.rating ? restaurant.rating : 0
+                .mapstars{"data-average" => "#{r}", "data-id" => restaurant.id, :id => ("star_" + restaurant.id.to_s)}
+                :javascript
+                  $(document).ready(function(){
+                    $("#star_#{restaurant.id.to_s}").jRating({
+                      length : 5,
+                      isDisabled: true,
+                      decimalLength : 1,
+                      rateMax: 5,
+                    });
+                  });
+            .row
+              .col-xs-12
+                = restaurant.description
+
+            .row
+              .col-xs-12
+                - restaurant.locations.each do |l|
+                  - a = l.address ? l.address : ""
+                  - c = l.city ? l.city.city + ", " : ""
+                  - s = l.city ? l.city.state.state + ", " : ""
+                  - z = l.zip ? l.zip.to_s + ", " : ""
+
+                  = link_to s + c + z + a, restaurant_path(l)
+                  %br
+    = will_paginate @restaurants, renderer: BootstrapPagination::Rails

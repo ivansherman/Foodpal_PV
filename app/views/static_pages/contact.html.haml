@@ -1,0 +1,14 @@
+.content
+  .contact-form
+
+    = form_tag dispatch_email_path, method: :post , id: "contact_form" do
+      = label_tag "user_info[name]", "Name"
+      = text_field_tag "user_info[name]","", class: "white required"
+      = label_tag "user_info[email]", "Email"
+      = text_field_tag "user_info[email]","", class: "white required email"
+      = label_tag "subject", "Subject"
+      = text_field_tag "subject","", class: "white"
+      = label_tag "user_info[message]", "Message"
+      = text_area_tag "user_info[message]", "", class: "white required"
+      = show_simple_captcha
+      = submit_tag "Send Message", class: "dark", style: "padding: 5px 15px;"

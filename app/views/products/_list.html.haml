@@ -1,0 +1,37 @@
+- if (menu.products.count > 0)
+  %table.table
+    %tr
+      %th #
+      %th Product title
+      %th Price
+      %th
+        %a.add_more{"data-id" => menu.id}
+          Add product
+
+    - menu.products.each do |p|
+      %tr
+        %td
+          = p.id
+        %td
+          = p.name
+        %td
+          = "$" + p.price.to_s
+
+        %td
+          %a.pedit(href="#"){"data-id" => p.id, "data-m_id" => menu.id}
+            edit
+
+          %a.pdelete(href="#"){"data-m_id" => menu.id, data: { confirm: "Are you sure?", id: p.id }}
+            delete
+
+- else
+
+  %h2
+    No any items
+    %a.add_first(href="#" ){"data-id" => menu.id}
+      Add first
+
+.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1", id: "addProduct_#{menu.id}"}
+  .modal-dialog
+    .modal-content
+      = render partial: "products/edit", locals: {menu: menu}

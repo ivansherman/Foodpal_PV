@@ -1,0 +1,87 @@
+
+-#:javascript
+-#  $(document).ready(function(){
+-#    if($('html').width() < 660){
+-#      $('.small-screen-none').css('display', 'none');
+-#
+-#      console.log('delete class');
+-#      //$('.col-xs-12').removeClass('.col-xs-6');
+-#    };
+//  })
+
+%header
+  .container
+    .block.top
+      -if current_user
+        .row.small-screen-none
+          .col-xs-12.text-right.user-link
+            Welcome,
+            = current_user.name
+            |
+            =link_to "My account", user_path
+      .row
+        .col-xs-12.head
+          .row
+            .col-xs-8
+              %a{href: root_path}
+                %img#logo-image(src = "/assets/logo.png")
+            .col-xs-3.small-screen-none.social{style: "min-width: 197px;"}
+              %ul
+                %li
+                  %a(href="https://www.facebook.com/FoodPal")
+                    %img(src="/assets/fb-big.png" )
+                %li
+                  %a(href="https://twitter.com/FoodpalLLC")
+                    %img(src="/assets/twitter-big.png" )
+                %li
+                  %a(href="https://plus.google.com/u/0/+Foodpal/posts")
+                    %img(src="/assets/googlep-big.png" )
+
+      .row.small-screen-none
+        %nav.main-menu
+          %ul
+            %li
+              =link_to "HOW FOODPAL WORKS", how_foodpal_works_path
+            %li.dropdown
+              %a#dLabel.dropdown-toggle{"data-target" => "#", "data-toggle" => "dropdown", href: about_us_path, role: "button"}
+                ABOUT US
+
+              %ul.dropdown-menu{"aria-labelledby" => "dLabel", role: "menu", style: "margin: 0; left: -335px; border:none; box-shadow: none "}
+                %div{style: "width: 900px; background: #94CA74; margin-top: 10px; border-radius: 30px; color: white"}
+                  %li
+                    = link_to  "Founder of Foodpal", founder_of_foodpal_path
+                  %li
+                    = link_to "Contact", contact_path
+                  %li
+                    = link_to "Terms & Agreements", privacy_policy_path
+
+
+            %li
+              =link_to "CAREERS", careers_path
+            %li
+              =link_to "BLOG", blogs_path
+            %li
+              =link_to "MEDIA KIT", media_kit_path
+
+      .row.small-screen-none
+        .col-xs-12
+          #flash-message
+            - flash.each do |key, value|
+
+              - if !key.match(/login/)
+                %div{class: "#{flash_class(key)} alert-dismissable"}
+                  %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", type: "button"} ×
+                  - if value.kind_of?(Array)
+                    = raw value.join("<br>")
+                  - else
+                    = raw value
+
+
+      - if (!current_page?(root_url))
+        .row.small-screen-none
+          .col-xs-12
+            .breadcrumbs
+              = render_breadcrumbs :separator => ' / '
+
+
+

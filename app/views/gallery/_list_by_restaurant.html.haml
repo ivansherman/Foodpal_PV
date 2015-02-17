@@ -1,0 +1,10 @@
+
+- if @restaurant.galleries.count > 0
+  - @restaurant.galleries.each do |g|
+    .image-block
+      .image{style: "background: url('#{g.image.url(:thumb)}'); background-size: cover;"}
+        .delete-image{"data-id" => g.id}
+
+.image-block
+  .image.new
+    .add-image

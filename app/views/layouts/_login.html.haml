@@ -1,0 +1,112 @@
+.login-form.small-screen-none#accordion
+  .container
+    #collapseOne.collapse.in
+
+      -if !current_user
+        .row
+          .col-xs-7
+            .new-user
+              #registration.new-user-inner
+
+                %h4 Create a New User
+                - flash.each do |key, value|
+                  - if key.match(/register/)
+                    %div{class: "#{flash_class(key)}"}
+                      = value
+                -@user = User.new
+                = form_for(@user, :as => :user, :url => registration_path(@user)) do |f|
+                  - if @user.errors.any?
+                    #error_explanation
+                      %h2
+                        = pluralize(@user.errors.count, "error")
+                        prohibited
+                        this post from being saved:
+                      %ul
+                        - @user.errors.full_messages.each do |msg|
+                          %li= msg
+                  %div.field
+                    = f.label :name, class: "green"
+                    = f.text_field :name, :autofocus => true, :placeholder => "[Name]", style: "width: 358px", class: "required green"
+                  %div.field
+                    = f.label :login
+                    %span *
+                    = f.text_field :login, :autofocus => true, :placeholder => "[Login]", style: "width: 350px", class: "required green"
+                  %div.field
+                    = f.label :email
+                    %span *
+                    = f.email_field :email, :autofocus => true, style: "width: 350px", class: "required green email"
+                  %div.field
+                    = f.label :password
+                    %span *
+                    = f.password_field :password, style: "width: 315px", class: "required green"
+                  %div.field
+                    = f.label :password_confirmation
+                    %span *
+                    = f.password_field :password_confirmation, style: "width: 213px", class: "required green"
+
+                    = f.label "What code is in the image?", style: "margin-top: 10px"
+                    %span *
+                    =f.simple_captcha
+
+                  %div.field.text-center
+                    =f.submit "CREATE NEW", class: "gray"
+
+          .col-xs-5
+
+            .login
+              .login-inner
+
+                %h4 Login
+                - flash.each do |key, value|
+                  - if key.match(/login/)
+                    %div{class: "#{flash_class(key)}"}
+                      = value
+                = form_for(@user, :url => session_path(@user), :html => {:id => "login_form"}) do |f|
+
+                  %div.field
+                    = f.label "Username or E-mail"
+                    %br/
+                    = f.text_field :login, :autofocus => true, class: "required white"
+                  %div.field
+                    = f.label :password
+                    %br/
+                    = f.password_field :password, class: "required white"
+                    = render "devise/shared/links"
+                    %div= f.submit "LOGIN", class: "gray"
+
+              .social-inner
+                %h4 Sign in using your account with
+                = link_to image_tag("/assets/facebook_64.png"), "/users/auth/facebook"
+                = link_to image_tag("/assets/google_64.png"), "/users/auth/google_oauth2"
+                = link_to image_tag("/assets/twitter_64.png"), "/users/auth/twitter"
+                -#= link_to image_tag("/assets/linkedin_64.png"), "/users/auth/linkedin"
+                -#= link_to image_tag("/assets/github_64.png"), "/users/auth/github"
+      - else
+        .row
+          .col-xs-7
+          .col-xs-5
+            .logout
+              .logout-inner
+                %h4 Login
+                %p You are logged in as:
+                =current_user.name
+                =button_to "LOGOUT", destroy_user_session_path, method: "delete", class: "big standart"
+
+  %div.switch-block
+    .switch-block-wrap
+      %a{"data-parent" => "#accordion", "data-toggle" => "collapse", href: "#collapseOne"}
+        -if !current_user
+          .switch-button-login
+        -else
+          .switch-button-logout
+
+
+:javascript
+  if ($(".alert.alert-danger").length == 0) {
+    $('.collapse').collapse();
+
+  } else {
+    $('html,body').scrollTop(0);
+  }
+
+

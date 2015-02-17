@@ -1,0 +1,64 @@
+.container.small-screen-none
+  .row
+    .col-xs-4
+      %ul
+        - if !current_user
+          %li
+            %a(href="#registration"){"onclick" => "$('#collapseOne').collapse('show')"}
+              Registration
+        %li
+          = link_to "Terms & Agreements", privacy_policy_path
+
+        %li
+          = link_to "Free Restaurant Listing Application", restaurants_listing_path
+
+    .col-xs-4
+      %h3 ABOUT FOODPAL
+      %ul
+        %li
+          = link_to "How We Work", how_foodpal_works_path
+        %li
+          = link_to "Career", careers_path
+        %li
+          = link_to "Blog", blogs_path
+        %li
+          = link_to "Founder of Foodpal", founder_of_foodpal_path
+
+
+      %h3 CONTACT US
+      %ul
+        %li
+          = link_to "Foodpal Contact Info", about_us_path
+        %li
+          = link_to "Contact form", contact_path
+
+
+    .col-xs-4
+      .block-green
+        %h3 SOCIAL MEDIA/NETWORKING
+        %ul
+          %li
+            %a(href="https://www.facebook.com/FoodPal")
+              %img(src="/assets/fb.png" )
+          %li
+            %a(href="https://twitter.com/FoodpalLLC")
+              %img(src="/assets/twitter.png" )
+          %li
+            %a(href="https://plus.google.com/u/0/+Foodpal/posts")
+              %img(src="/assets/googlep.png" )
+
+      .block-green
+        %h3 FOODPAL MOBILE
+        %ul
+          %li
+            %a(href=iphone_mobile_application_path)
+              %img(src="/assets/IPhone.png" )
+          %li
+            %a(href="#")
+              %img(src="/assets/IPad.png" )
+          %li
+            %a(href="#")
+              %img(src="/assets/Android.png" )
+
+
+

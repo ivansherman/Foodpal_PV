@@ -1,0 +1,38 @@
+.col-xs-6
+  %h1.green
+    FRESH PICKS
+    %img(src="assets/cutlery.png" )
+  #restaurant_list
+    =render partial: 'restaurant_list'
+
+.col-xs-6.text-center
+  %h2.green WHAT ARE YOU CRAVING?
+  Try our Foodpal Recommendation System
+
+  .craving
+    %div.field
+      = label_tag(:name, "What are you in the Mood for?", class: "white")
+      = text_field_tag :name, "", class: "white required"
+
+    -#= button_to "Recommend a Restaurant", "#", class: "dark", "data-toggle" => "modal",  "data-target" => "#myModal"
+    = button_to "Recommend a Restaurant", "#", class: "dark", id: "recommended", style: "padding: 5px 10px;font-size: 18px;"
+
+#myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+        %h4#myModalLabel.modal-title Recommend a Restaurant
+      .modal-body{style: "max-height: 414px;overflow: auto;"}
+        .comments-list
+          %ul.nav.nav-tabs
+            %li
+              %a{"data-toggle" => "tab", href: "#rest"} Restaurants
+            %li
+              %a{"data-toggle" => "tab", href: "#blogs"} Blogs
+          / Tab panes
+          .tab-content
+            #rest.tab-pane.active
+              = render partial: "restaurants/recomended_restaurant"
+            #blogs.tab-pane
+              = render partial: "restaurants/recomended_blogs"

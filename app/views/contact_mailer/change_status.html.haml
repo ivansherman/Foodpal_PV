@@ -1,0 +1,10 @@
+%div{style: "background: #94ca74; padding: 25px; "}
+  %div{style: "background: #f4feff; padding: 15px; border-radius: 10px;"}
+    %div{style: ""}
+      = image_tag attachments['logo.png'].url
+    %div
+      %h1
+        Status of your
+        %a(href="http://foodpal.com/orders/#{@order.id}")
+          order
+        was changed to "#{@order.status.title.to_s}"

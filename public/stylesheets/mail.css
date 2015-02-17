@@ -1,0 +1,20 @@
+ fieldset {
+    border: 1px solid #CCC;    
+  }
+
+  fieldset legend {
+    color: #CACACA;
+    padding: 5px 20px;
+  }
+
+  table {
+    width: 100%;
+
+  }
+
+  table tr th {
+    text-align: left;
+    padding: 5px 10px 5px 0;
+  }
+
+ 

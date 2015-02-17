@@ -1,0 +1,59 @@
+
+- if @restaurant.locations.count > 0
+
+  %table.table
+    %tr
+      %th #
+      %th State
+      %th City
+      %th Address
+      %th Phone
+      %th Orders
+      %th
+        %span.label.label-default.addLocations{"data-rest_id" => @restaurant.id}
+          %span
+            +
+
+    - @restaurant.locations.each do |l|
+      %tr
+        %td
+          = l.id
+
+        %td
+          = l.city.state.state if l.city
+        %td
+          = l.city.city if l.city
+        %td
+          = l.address if l.address
+        %td
+          = l.phone if l.phone
+        %td
+          = link_to l.orders.count.to_s + " orders", "/orders/restaurants_orders/" + l.id.to_s
+        %td
+          = link_to "edit", "#", class: "edit_location", "data-id" => l.id
+          |
+          = link_to "delete", "#", class: "delete_location", "data-id" => l.id
+- else
+  %h2
+    No any items
+    %span.label.label-default.addLocations{"data-rest_id" => @restaurant.id}
+      %span
+        +
+
+- @location = Location.new
+#addLocations.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+        %h4#myModalLabel.modal-title Location
+
+      .modal-body{style: "max-height: 414px;overflow: auto;"}
+        .writing.location
+          %img(src="/assets/writing.gif" ){style: "margin: 0 auto"}
+        .loading.location
+          %img(src="/assets/loading.gif" ){style: "margin: 0 auto"}
+        .location-form
+
+          = render partial: "locations/new", locals: {restaurant: @restaurant}
+

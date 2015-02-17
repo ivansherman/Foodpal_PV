@@ -1,0 +1,41 @@
+.content.medias
+  #carousel-example-generic.carousel.slide{"data-ride" => "carousel"}
+    / Indicators
+    %ol.carousel-indicators
+      %li.active{"data-slide-to" => "0", "data-target" => "#carousel-example-generic"}
+      %li{"data-slide-to" => "1", "data-target" => "#carousel-example-generic"}
+      %li{"data-slide-to" => "2", "data-target" => "#carousel-example-generic"}
+      %li{"data-slide-to" => "3", "data-target" => "#carousel-example-generic"}
+      %li{"data-slide-to" => "4", "data-target" => "#carousel-example-generic"}
+      %li{"data-slide-to" => "5", "data-target" => "#carousel-example-generic"}
+      %li{"data-slide-to" => "6", "data-target" => "#carousel-example-generic"}
+      %li{"data-slide-to" => "7", "data-target" => "#carousel-example-generic"}
+      %li{"data-slide-to" => "8", "data-target" => "#carousel-example-generic"}
+      %li{"data-slide-to" => "9", "data-target" => "#carousel-example-generic"}
+    / Wrapper for slides
+    .carousel-inner
+      .item.active
+        %img{src: "/assets/media_kit/1.png"}
+      .item
+        %img{src: "/assets/media_kit/2.png"}
+      .item
+        %img{src: "/assets/media_kit/3.png"}
+      .item
+        %img{src: "/assets/media_kit/4.png"}
+      .item
+        %img{src: "/assets/media_kit/5.png"}
+      .item
+        %img{src: "/assets/media_kit/6.png"}
+      .item
+        %img{src: "/assets/media_kit/7.png"}
+      .item
+        %img{src: "/assets/media_kit/8.png"}
+      .item
+        %img{src: "/assets/media_kit/9.png"}
+
+    / Controls
+    %a.left.carousel-control{"data-slide" => "prev", href: "#carousel-example-generic"}
+      %span.glyphicon.glyphicon-chevron-left
+    %a.right.carousel-control{"data-slide" => "next", href: "#carousel-example-generic"}
+      %span.glyphicon.glyphicon-chevron-right
+

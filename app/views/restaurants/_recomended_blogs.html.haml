@@ -1,0 +1,24 @@
+.loading.blogs{style: "text-align: center; display: none"}
+  %img(src="/assets/loading.gif" ){style: "margin: 0 auto"}
+- if @blogs
+
+  - @blogs.each do |b|
+    .foodline
+      .row
+        .col-xs-12
+          %h1
+            = link_to b.title, blog_path(b)
+
+      .row
+        .col-xs-12
+          %p
+            - text = Nokogiri::HTML(b.text)
+            - img = text.xpath("//img").first
+            - img.set_attribute("style", "")
+            - img.set_attribute("class", "post_image")
+            = raw img
+            = strip_tags(b.text.truncate(512))
+
+- else
+  %h1
+    No any results

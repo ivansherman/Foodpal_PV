@@ -1,0 +1,66 @@
+.content
+  .post
+    = render partial:  'grid'
+
+
+    -#- if @users
+
+  -#    %table.table.tablesorter
+  -#      %thead
+  -#        %tr
+  -#          %th #
+  -#          %th Name
+  -#          %th Role
+  -#          %th
+  -#
+  -#
+  -#      - @users.each do |u|
+  -#        %tr
+  -#          %td
+  -#            = u.id
+  -#          %td
+  -#            = link_to u.name, edit_user_path(u), class: "restaurant_#{u.id}", "data-value" => u.id if u.id != current_user.id
+  -#            = u.name if u.id == current_user.id
+  -#
+  -#          %td
+  -#            = u.roles.first.name if u.roles.first
+  -#
+  -#          %td
+  -#            %span.label.label-primary
+  -#              Restaurants:
+  -#              = u.restaurants.count
+  -#            %span.label.label-success
+  -#              Blogs:
+  -#              = u.blogs.count
+  -#
+  -#            %span.label.label-default
+  -#              Orders:
+  -#              = u.orders.count
+  -#
+  -#    = will_paginate @users, renderer: BootstrapPagination::Rails
+  -#
+  -#  - else
+  -#    %h1 No Any Restaurants
+  -#
+  -#:javascript
+  -#  $(function(){
+  -#    $("table.table.tablesorter").tablesorter({
+  -#      sortList:[
+  -#        [0,0]
+  -#      ],
+  -#      headers: {
+  -#        0: {
+  -#            sorter: "digit"
+  -#        },
+  -#        1: {
+  -#            sorter: "text"
+  -#        },
+  -#        2: {
+  -#            sorter: "text"
+  -#        },
+  -#        3: {
+  -#            sorter: "false"
+  -#        }
+  -#      },
+  -#    });
+  -#  });

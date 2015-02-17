@@ -1,0 +1,44 @@
+- if @restaurant.menus.count > 0
+  %table.table
+    %tr
+      %th #
+      %th Menu title
+      %th
+        %a#add_more_menu(href="#" )
+          Add New Menu
+
+    - @restaurant.menus.each do |m|
+      %tr
+        %td
+          = m.id
+        %td
+          %a{"data-parent" => "#accordion", "data-toggle" => "collapse", href: "#collapse_#{m.id}", class: "collapsed"}
+            %h1
+              = m.name
+              %label.label.label-info
+                Products:
+                = m.products.count
+          .collapse.in{id: "collapse_#{m.id}"}
+            .products
+              = render partial: 'products/list', locals: {menu: m}
+        %td
+          %a.edit(href="#"){"data-id" => m.id}
+            edit
+
+          %a.delete(href="#"){"data-id" => m.id}
+            delete
+- else
+  %h2
+    No any items
+    %a.menu(href="#" )
+      Add first
+
+#addMenu.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      = render partial: "menus/edit_and_add"
+
+
+
+:javascript
+  $('.collapse').collapse();

@@ -1,0 +1,19 @@
+<div class="login-form small-screen-none content">
+  <div class="login" style="background: none; width: 450px; padding: 0; margin: 0 auto">
+    <div class="login-inner">
+      <h4>Forgot your password?</h4>
+      <%= form_for(resource, :as => resource_name, :url => "/users/generate_new_password_email", :html => { :method => :post }) do |f| %>
+          <div class="field">
+            <div><%= f.label :email %><br />
+              <%= f.email_field :email, :autofocus => true %></div>
+          </div>
+          <div class="field">
+            <%= f.submit "Send me reset password instructions", class: "gray", style: "width: auto" %>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+

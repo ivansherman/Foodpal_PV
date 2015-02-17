@@ -1,0 +1,11 @@
+- blog.comments.reverse.each do |comment|
+  .row.comment-item
+    .logo
+      = image_tag comment.user.avatar.url(:thumb)
+    .content
+      %h1
+        = comment.user.name
+      %span
+        = comment.created_at.strftime("%m/%d/%Y at %I:%M %p ")
+      %p
+        = comment.comment

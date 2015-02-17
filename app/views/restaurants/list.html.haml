@@ -1,0 +1,8 @@
+.content
+  .post
+    -#= render partial: 'import_restaurants'
+
+    - if can? :manage, Restaurant
+      = link_to "Add Restaurant", restaurants_new_path, class: "btn btn-info", style: "margin: 10px; float: right"
+    - if @restaurants
+      = render partial:  'grid'

@@ -1,0 +1,28 @@
+.loading.restaurant{style: "text-align: center; display: none"}
+  %img(src="/assets/loading.gif" ){style: "margin: 0 auto"}
+
+- @locations.each do |l|
+  .foodline
+    .row
+      .col-xs-4
+        - if (l.restaurant.logo)
+          - img = l.restaurant.logo.to_s
+          - logo = File.exist?(Rails.root.join('public', 'images', img))  ? "/images/" + img : "/assets/imagenotavailable.png"
+        - else
+          - logo = "/assets/imagenotavailable.png"
+
+        %img(src=logo )
+      .col-xs-8
+        .row
+          .col-xs-12
+            %h1
+              = link_to l.restaurant.name, restaurant_path(l)
+
+        .row
+          .col-xs-12
+            %p{id: "longtext-#{l.id}"}
+              = l.restaurant.description
+            :javascript
+              $(function() {
+                  $('#longtext-#{l.id}').more({length: 100});
+              });

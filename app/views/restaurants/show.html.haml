@@ -1,0 +1,186 @@
+-#= require ''
+-restaurant = (@loc)? @loc.restaurant : @restaurant
+- provide(:title, restaurant.name)
+.row#searchbox
+  .col-xs-12
+    .row.dotted
+      .col-xs-3.text-center.image{style: "width: 262px"}
+        = image_tag restaurant.image.url(:medium)
+      .col-xs-5{style: "width: 376px"}
+
+        %h1
+          = restaurant.name.gsub!("_", " ")
+
+          - if current_user
+            = link_to '<i class="glyphicon glyphicon-edit"></i>'.html_safe, edit_restaurant_path(restaurant) if current_user.role? :admin || current_user.id == restaurant.user.id
+
+        - r = @loc.restaurant.rating ? @loc.restaurant.rating : 0
+        .stars{"data-average" => "#{r}", "data-id" => @loc.restaurant.id}
+        - disable = true
+        - disable = !current_user.ratings.where(:restaurant_id => @loc.restaurant.id).blank? if current_user
+        :javascript
+          $(document).ready(function(){
+              $(".stars").jRating({
+                isDisabled : #{disable},
+                step:true,
+                length : 5, // nb of stars
+                rateMax: 5,
+                decimalLength:2,// number of decimal in the rate
+                rate: 1
+              });
+            });
+        - if @loc
+          - a = @loc.address ? @loc.address : ""
+          - c = @loc.city ? @loc.city.city + ", " : ""
+          - s = @loc.city ? @loc.city.state.state + ", " : ""
+          - z = @loc.zip ? @loc.zip.to_s + ", " : ""
+          %p
+            = s + c + z + a
+
+        - if @loc.phone != "" && @loc.phone
+          %p
+            Tel:
+            = @loc.phone
+        - if @loc.restaurant.email != "" && @loc.restaurant.email
+          %p
+            E-Mail:
+            = @loc.restaurant.email
+        %p
+          = link_to image_tag("/assets/www.png"), @loc.restaurant.url, target: "_blank" if @loc.restaurant.url != "" && @loc.restaurant.url
+          = link_to image_tag("/assets/fb.png"), @loc.restaurant.facebook_url, target: "_blank" if @loc.restaurant.facebook_url != "" && @loc.restaurant.facebook_url
+          = link_to image_tag("/assets/twitter.png"), @loc.restaurant.twitter_url, target: "_blank" if @loc.restaurant.twitter_url != "" && @loc.restaurant.twitter_url
+          = link_to image_tag("/assets/googlep.png"), @loc.restaurant.g_url, target: "_blank" if @loc.restaurant.g_url != "" && @loc.restaurant.g_url
+
+
+
+      .col-xs-4{style: "width: 262px"}
+        = link_to "See the Menu", "#menu-list", class: "big red"
+        = button_to "Leave a Review", "#", class: "big green", "data-toggle" => "modal",  "data-target" => "#myModal"
+        = button_to "Call Us", "#", class: "big yellow", "data-toggle" => "modal",  "data-target" => "#callModal" if @loc.phone != "" && @loc.phone
+
+
+        #myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+          .modal-dialog
+            .modal-content
+              .modal-header
+                %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+                %h4#myModalLabel.modal-title User Reviews
+              .modal-body{style: "max-height: 414px;overflow: auto;"}
+                .comments-list
+                  = render partial: "comments/comment",  locals: {restaurant: @loc.restaurant}
+              - if current_user
+                .modal-footer
+                  .comments-form
+                    = form_for @comment, url: comments_create_path({:rest_id => @loc.restaurant.id}) do |form|
+                      = form.text_area :comment, class: "white"
+                      = hidden_field_tag(:rest_id, @loc.restaurant.id)
+                      = form.submit "Add a Review", id: "add_comment", class: "dark"
+
+        #callModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+          .modal-dialog
+            .modal-content
+              .modal-header
+                %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+                %h4#myModalLabel.modal-title Call Us: #{@loc.phone}
+              .modal-body{style: "max-height: 414px;overflow: auto;"}
+                .call-us
+                  %script{src: "//static.twilio.com/libs/twiliojs/1.1/twilio.min.js", type: "text/javascript"}
+                  :javascript
+                    Twilio.Device.setup("#{@token}", {debug: true});
+
+                    Twilio.Device.ready(function (device) {
+                        $("#log").text("Restaurant '#{@client_name.gsub!("_", " ")}' is ready");
+                    });
+
+                    Twilio.Device.error(function (error) {
+                        $("#log").text("Error: " + error.message);
+                    });
+
+                    Twilio.Device.connect(function (conn) {
+                        $("#log").text("Successfully established call");
+                    });
+
+                    Twilio.Device.disconnect(function (conn) {
+                        $("#log").text("Call ended");
+                    });
+
+                    Twilio.Device.incoming(function (conn) {
+                        $("#log").text("Incoming connection from " + conn.parameters.From);
+                        // accept the incoming connection and start two-way audio
+                        conn.accept();
+                    });
+
+                    function call() {
+                        // get the phone number or client to connect the call to
+                        params = {"PhoneNumber": #{@loc.phone}};
+                        Twilio.Device.connect(params);
+                    }
+
+                    function hangup() {
+                        Twilio.Device.disconnectAll();
+                    }
+
+                  .buttons{style: "overflow: hidden"}
+                    %a.call{onclick: "call();"}
+                      %img{src: "/assets/call.png"}/
+                      Call
+                    %a.hangup{onclick: "hangup();"}
+                      %img{src: "/assets/hangup.png"}/
+                      Hangup
+
+                  #log
+
+
+    .row
+      .col-xs-6
+        .gallery
+          - if @loc.restaurant.galleries.count > 0
+
+            #makeMeScrollable
+              - @loc.restaurant.galleries.each_with_index do |p, i|
+                %img{alt: "Field", src: "#{p.image.url(:medium)}", id: "img_#{i}"}/
+
+            :javascript
+              $(document).ready(function () {
+                  $("#makeMeScrollable").smoothDivScroll({
+                      mousewheelScrolling: "allDirections",
+                      manualContinuousScrolling: true,
+                      autoScrollingMode: "onStart"
+                  });
+              });
+
+
+      .col-xs-6
+        .review.green-bottom
+          %h2.green USER REVIEWS
+          .comments-list
+            - if @loc.restaurant.comments.count > 0
+              .comment-item
+                .logo
+                  %img(src="#{getImage(@last_comment.user.image)}" )
+                .content
+                  %h1
+                    = @last_comment.user.name
+                  %span
+                    = @last_comment.created_at.strftime("%m/%d/%Y at %I:%M %p ")
+                  %p
+                    = @last_comment.comment
+            - else
+              No reviews
+
+.row
+  .col-xs-6
+    #menu-list.block
+      = render partial: 'menu_list'
+
+  .col-xs-6#cart-container
+    = render partial: 'cart', locals: {location: @loc}
+
+
+
+
+#addToCart.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    - product = Product.new
+    = render partial: 'carts/edit', locals: {product: product, cart: @cart}
+

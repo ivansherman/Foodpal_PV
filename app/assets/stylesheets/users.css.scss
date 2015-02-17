@@ -1,0 +1,107 @@
+// Place all the styles related to the Users controller here.
+// They will automatically be included in application.css.scss.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.content {
+
+  img {
+    max-width: 150px;
+  }
+
+  table {
+    td, th {
+      padding: 5px 25px 0 0;
+    }
+  }
+
+}
+
+.field {
+  label {
+    display: block;
+  }
+}
+
+.post {
+  padding: 20px 0;
+  overflow: auto;
+
+  input[type=submit].green {
+    float: right;
+    padding: 5px 10px;
+  }
+
+  h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #94ca17;
+    text-transform: uppercase;
+    line-height: normal;
+    margin-bottom: 5px;
+
+  }
+
+
+  label {
+    display: block;
+    margin: 0 10px;
+  }
+
+  input[type=text] {
+    margin: 0 0 10px 0px;
+    width: 100%;
+  }
+
+  .label {
+    margin: 5px;
+  }
+
+  input.string {
+    font-size: 14px;
+    color: #428bca;
+    border: 0;
+    background: 0;
+    box-shadow: none;
+    float: none;
+
+  }
+
+  .fieldset {
+    h2 {
+      font-size: 17px;
+      color: #2A952A;
+    }
+  }
+
+
+
+}
+
+
+
+#map {
+  width: 560px;
+  height: 540px;
+}
+//
+.entry-content img, .comment-content img, .widget img {
+  max-width: 97.5%;
+}
+//
+.pac-container {
+  background-color: #FFF;
+  z-index: 2000;
+  position: fixed;
+  display: inline-block;
+  float: left;
+}
+//
+.modal {
+  z-index: 200000;
+}
+//
+img[src*="gstatic.com/"], img[src*="googleapis.com/"]  {
+  max-width: 99999px;
+}

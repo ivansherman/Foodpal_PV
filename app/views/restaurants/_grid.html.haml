@@ -1,0 +1,19 @@
+-#- show_filters: :when_filtered
+=  grid(@restaurants, show_filters: :when_filtered, allow_showing_all_records:  false) do |g|
+  - g.column name:  '#', attribute: 'id'
+  - g.column name:  'Name', attribute: 'name' do |task|
+    - link_to(task.name, edit_restaurant_path(task))
+
+  - g.column name:  '' do |task|
+    - raw "<div>
+    - <span class=\"label label-primary\">Locations: #{task.locations.count}</span>
+    - <span class=\"label label-success\">Menu: #{task.menus.count}</span>
+    - <span class=\"label label-warning\">Products: #{
+    - task.menus.map{|menu| menu.products}.flatten!.count unless task.menus.map{|menu| menu.products}.flatten!.blank?
+    - }#{
+    - 0 unless !task.menus.map{|menu| menu.products}.flatten!.blank?
+    - }</span>
+    - <span class=\"label label-default\">Photos: #{task.galleries.count}</span>
+    - </div>"
+
+  - g.blank_slate content_tag(:div, "No restourants found", class: 'well')

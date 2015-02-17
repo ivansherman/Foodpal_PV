@@ -1,0 +1,37 @@
+.modal-content
+  .loading.product
+    %img(src="/assets/loading.gif" ){style: "margin: 0 auto"}
+  = form_tag "/line_items", method: "POST", id: "add_cart_form" do
+    .modal-header
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+      %h4.modal-title
+        Add "#{product.name}" to cart
+    .modal-body
+      .article
+        = image_tag product.image.url(:thumb), style: "float: left; margin: 0 10px 10px 0; width: 150px"
+        %p
+          = product.description
+
+      .row{style: "clear: both"}
+
+        .col-xs-4
+          = label_tag "Quantity:"
+          - val = 1
+          - val = product.line_items.where(cart_id: cart.id).first.quantity if product.line_items.where(cart_id: cart.id).first
+          %input{max: "30", min: "1", name: "line_item[quantity]", type: "number", value: val}
+        .col-xs-5
+          Base Price:
+          .price
+            $
+            = product.price
+        .col-xs-3
+
+    .modal-footer
+      .row
+        .col-xs-4{style: "text-aligh: left"}
+          = submit_tag "Remove from Cart",  class: "btn btn-danger remove_from_cart_btn", name: "remove", :confirm => "Are you shure?" if product.line_items.where(cart_id: cart.id).first
+        .col-xs-3.col-md-4
+
+        .col-xs-4{style: "text-aligh: right"}
+          = hidden_field_tag "line_item[product_id]", product.id
+          = submit_tag "Add To Cart",  class: "btn btn-info add_to_cart_btn", name: "add"

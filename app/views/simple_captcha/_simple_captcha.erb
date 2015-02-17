@@ -1,0 +1,36 @@
+<style type="text/CSS">
+    /*.simple_captcha{border: 1px solid #ccc; padding: 5px !important;}*/
+    .simple_captcha,
+    .simple_captcha div {
+        display: table;
+    }
+
+    input#user_captcha {
+        width: 220px;
+        background: #94ca74;
+        border-radius: 20px;
+        font-size: 18px;
+        border: none;
+        box-shadow: inset 3px 4px 10px rgba(0, 0, 0, 0.3);
+        padding: 4px 15px;
+        color: #ffffff;
+    }
+
+    input#user_captcha::-webkit-input-placeholder {
+        color: #ffffff;
+    }
+
+    input#user_captcha::-moz-placeholder {
+        color: #ffffff;
+    }
+
+    input#user_captcha:focus {
+        border: none;
+    }
+
+</style>
+
+<div class="simple_captcha">
+  <%= simple_captcha_options[:field] %><%= simple_captcha_options[:image] %>
+</div>
+

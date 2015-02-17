@@ -1,0 +1,11 @@
+- if @loc.restaurant.menus.count < 1
+  %h2.green NO MENU AVAILABLE
+- @loc.restaurant.menus.each do |m|
+  %a{"data-parent" => "#accordion", "data-toggle" => "collapse", href: "#collapse_#{m.id}", class: "collapsed"}
+    %h1.green
+      = m.name
+  .collapse.in{id: "collapse_#{m.id}"}
+    = render partial: 'products_list', locals: {menu: m}
+
+:javascript
+  $('.collapse').collapse();

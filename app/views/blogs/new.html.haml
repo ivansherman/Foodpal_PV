@@ -1,0 +1,8 @@
+.content
+  .post
+    %h1 Add New Post
+    = form_for @blog, url: blogs_create_path, :html => {:id => "blog_form"} do |form|
+      = form.label :title
+      = form.text_field :title, :class => "white"
+      = form.submit "Save Changes", class: "btn btn-success"
+      = form.cktext_area :text, :ckeditor => { :height => 1000 } , :value => @blog.text, :ckeditor => {:language => "us", :toolbar => "mini"}

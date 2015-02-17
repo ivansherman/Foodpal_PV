@@ -1,0 +1,149 @@
+- provide(:title, current_user.name)
+
+-##flash-message
+-#  - flash.each do |name, msg|
+-#    = content_tag :div, msg, :id => "flash_#{name}"
+
+- Time::DATE_FORMATS[:datetime] = "%m/%d/%Y at %k:%M"
+.content
+
+  %ul.nav.nav-tabs
+    %li{class: "active"}
+      %a{"data-toggle" => "tab", href: "#view"} View
+    %li
+      %a{"data-toggle" => "tab", href: "#edit"} Edit
+    %li
+      %a{"data-toggle" => "tab", href: "#pass"} Change Password
+
+    %li.dropdown
+      %a#setting.dropdown-toggle{"data-toggle" => "dropdown", href: "#", role: "button"}
+        Management
+        %b.caret
+      %ul.dropdown-menu{"aria-labelledby" => "setting", role: "menu"}
+        %li
+          = link_to "Orders List", orders_list_path
+        - if can? :manage, Restaurant
+          %li
+            = link_to "Restaurants Management", restaurants_list_path
+
+        - if can? :update, @users
+          %li
+            = link_to "User Management", users_list_path
+
+
+  .tab-content
+    #view.tab-pane.active
+      .post
+        %h1 User info
+        .row{style: "margin: 0"}
+
+          .col-xs-3
+            = image_tag current_user.avatar.url(:thumb)
+
+          .col-xs-9
+            %table
+              %tr
+                %th
+                  Full Name
+                %td
+                  = current_user.name
+              %tr
+                %th
+                  Login
+                %td
+                  = current_user.login
+              %tr
+                %th
+                  Email
+                %td
+                  = current_user.email
+              %tr
+                %th
+                  Phone
+                %td
+                  = current_user.phone
+
+              %tr
+                %th
+                  Address
+                %td
+                  = current_user.address.city.state.country.short_name + ", " +  current_user.address.city.state.state + ", " + current_user.address.city.city + ", " + current_user.address.address if current_user.address.city if current_user.address
+              %tr
+                %th
+                  Last Login At
+                %td
+                  = current_user.last_sign_in_at.to_s(:datetime)
+
+    #edit.tab-pane
+      .post
+        = form_for @user, url: "users/update",  :html => { :multipart => true }  do |form|
+          .row{style: "margin: 0"}
+            .col-xs-5
+              %h1 Edit User
+            .col-xs-2
+              = form.submit "Save Changes", class: "btn btn-success"
+
+          %table
+            %tr
+              %td
+                = image_tag current_user.avatar.url(:thumb)
+                = form.file_field  :avatar
+            %tr
+              %td
+                = form.label :name
+                = form.text_field :name, :class => "white"
+              %td
+                = form.label :login
+                = form.text_field :login, :class => "white"
+            %tr
+              %td
+                = form.label :email
+                = form.text_field :email, :class => "white"
+              %td
+                = form.label :phone
+                = form.text_field :phone, :class => "white"
+            %tr
+              %td
+
+                -##country
+                -#  = collection_select(:country, :id, Country.all, :id, :short_name)
+                = label_tag "State"
+                #state.styled-select
+                  = collection_select(:state, :id, State.all, :id, :state)
+              %td
+                = label_tag "City"
+                #city.styled-select{style: "display: none"}
+                  = collection_select(:address, :city_id, [], :id, :city)
+
+              %tr
+                %td
+                  = fields_for @user.address do |a|
+                    = a.label :address
+                    = a.text_field :address, :class => "white"
+
+
+            %tr
+              %td
+
+
+
+
+    #pass.tab-pane
+      .post
+
+        %h1
+          Edit
+        = form_for(current_user, :url => users_update_password_path(current_user), :html => { :method => :put }) do |f|
+
+          .field
+            = f.label :password
+            = f.password_field :password, :autocomplete => "off", :class => "white"
+          .field
+            = f.label :password_confirmation
+            = f.password_field :password_confirmation, :class => "white"
+
+          .field{style: "margin: 10px"}
+            = f.submit "Update", :class => "btn btn-danger"
+
+
+

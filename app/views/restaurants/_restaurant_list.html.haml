@@ -1,0 +1,84 @@
+- @locations.each do |l|
+
+  .foodline
+    .row
+      .col-xs-4
+        = image_tag l.restaurant.image.url(:thumb)
+      .col-xs-8
+        .row
+          .col-xs-8
+            %h1
+              = link_to l.restaurant.name, restaurant_path(l)
+          .col-xs-4
+            - r = l.restaurant.rating ? l.restaurant.rating : 0
+            .mapstars{"data-average" => "#{r}", "data-id" => l.restaurant.id, :id => ("star_" + l.id.to_s)}
+            :javascript
+              $(document).ready(function(){
+                $("#star_#{l.id.to_s}").jRating({
+                  type:'small',
+                  length : 5,
+                  isDisabled: true,
+                  decimalLength : 1,
+                  rateMax: 5,
+                });
+              });
+            -#= r
+        .row
+          .col-xs-12
+            - zip = l.zip ? l.zip.to_s : ""
+            = l.city.state.country.iso2.to_s + " " + l.city.state.state.to_s + ", " + l.city.city.to_s + ", " + zip.to_s + ", " + l.address.to_s
+
+-#= will_paginate @locations #, renderer: BootstrapPagination::Rails
+
+:javascript
+
+  markers_json = #{raw @hash.to_json};
+
+  //console.log(IsJsonString());
+
+  if (markers_json != null) {
+  console.log(Object.keys(markers_json).length);
+
+  if (Object.keys(markers_json).length < 1) {
+        $("#searchbox .flash").css("display", "block");
+    } else {
+
+      $("#searchbox .flash").css("display", "none");
+    }
+
+    if (Object.keys(markers_json).length > 0) {
+        handler = Gmaps.build('Google');
+        console.log("Handler: 1");
+        handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
+          console.log("Handler: 2");
+          markers = handler.addMarkers(markers_json);
+          console.log("Handler: 3 ");
+          handler.bounds.extendWith(markers);
+          console.log("Handler: 4");
+
+            $(document).on('click','.map-rest-link', function(){
+                  console.log('click2');
+               for(key in markers){
+                 if(markers[key].infowindow){
+
+                 markers[key].infowindow.close();
+                 };
+               }
+             })
+
+
+        handler.fitMapToBounds();
+
+      });
+
+      } else {
+        var keyword = "#{@keyword.to_s}";
+        console.log(keyword);
+        getLocationsByAddress(keyword);
+
+      }
+  }
+
+
+
+

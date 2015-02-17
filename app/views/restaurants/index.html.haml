@@ -1,0 +1,179 @@
+#searchbox
+  .row
+    .col-xs-5
+      .searchinner{style: "height: 360px"}
+        - @cuisines = Cuisine.new
+        = form_for @cuisines, url: root_path, id: 'form_for_search' do |f|
+          %div.field
+            Search by: 
+            #togle-buttons.btn-group.btn-group-sm{role: "toolbar", style: "margin: 10px 0"}
+              %button.btn.btn-default.active{type: "button", "data-filter" => 0} All
+              %button.btn.btn-default{type: "button", "data-filter" => 1} Restaurant
+              %button.btn.btn-default{type: "button", "data-filter" => 2} City
+              %button.btn.btn-default{type: "button", "data-filter" => 3} Zip
+              %button.btn.btn-default{type: "button", "data-filter" => 4} State
+            = text_field_tag :name, '', :autofocus => true, style: "width: 254px", class: "white required"
+            and/or
+          %div.field
+            = label_tag "Type of Cuisine"
+            %br
+            -#= text_field_tag :cuisine, nil, class: "cuisine"
+            = autocomplete_field_tag 'cuisine', '', autocomplete_cuisine_name_cuisines_path, class: "white"
+            -#= f.autocomplete_field :name, cuisines_autocomplete_path
+          %div.field
+            = label_tag "Method"
+
+            %br
+            = radio_button_tag(:delivery, 1, true, class: "css-checkbox")
+            %label.css-label{for: "delivery_1"} Delivery
+            -#= label(:delivery_child, "Delivery")
+            %br
+            = radio_button_tag(:delivery, 0, false, class: "css-checkbox")
+            %label.css-label{for: "delivery_0"} Pick up
+            -#= label_tag(:delivery_adult, "Pick up")
+
+
+          %div.field.text-center
+            = submit_tag "GO!", :id => 'search_form', class: "dark", style: "width: 100px; margin: 0 auto; padding: 5px; font-size: 22px"
+
+    .col-xs-7
+
+      #map-loader
+        .image{style: "position: absolute; z-index: 1000; top: 7%; left: 26.5%"}
+          %img(src="assets/loading_spin.gif" )
+        .flash
+          .close_button
+          %p Not any restaurants found
+
+        %div#map
+  .row
+    .col-xs-12
+      #indicator
+
+.block
+  .row
+    .col-xs-7
+      %h1.green
+        FOLLOW US ANYWHERE
+        %ul
+          %li
+            %a{href: "https://www.facebook.com/FoodPal", target: "_blank"}
+              %img(src="assets/fb.png" )
+          %li
+            %a{href: "https://twitter.com/FoodpalLLC", target: "_blank"}
+              %img(src="assets/twitter.png" )
+          %li
+            %a{href: "https://plus.google.com/u/0/+Foodpal/posts", target: "_blank"}
+              %img(src="assets/googlep.png" )
+
+      .quote.green-bottom
+        %p “Foodpal allows me to connect with all of my favorite restaurants within minutes!”
+        \- Robin Hunting
+    .col-xs-5.text-center
+      .mobile.green-bottom
+        %h2.green FOODPAL MOBILE
+        %ul
+          %li
+            %a(href=iphone_mobile_application_path)
+              %img(src="assets/IPhone.png" )
+
+          %li
+            %a(href="#")
+              %img(src="assets/IPad.png" )
+
+          %li
+            %a(href="#")
+              %img(src="assets/Android.png" )
+
+.block
+  .row#restaurant_page
+    = render partial: 'index_content'
+
+.block
+  .row
+    .col-xs-12
+      %h2.green See What the Rave is About:
+      #carousel-generic
+        .carousel-inner
+          .item.active
+            %ul
+              %li
+                %img(src="/assets/partners/partner_0.png" )
+              %li
+                %img(src="/assets/partners/partner_1.png" )
+              %li
+                %img(src="/assets/partners/partner_2.png" )
+              %li
+                %img(src="/assets/partners/partner_3.png" )
+              %li
+                %img(src="/assets/partners/partner_4.png" )
+          .item
+            %ul
+              %li
+                %img(src="/assets/partners/partner_4.png" )
+              %li
+                %img(src="/assets/partners/partner_3.png" )
+              %li
+                %img(src="/assets/partners/partner_0.png" )
+              %li
+                %img(src="/assets/partners/partner_3.png" )
+              %li
+                %img(src="assets/partners/partner_1.png" )
+
+        %a.left.carousel-control{"data-slide" => "prev", href: "#carousel-generic"}
+          %span.glyphicon.glyphicon-chevron-left
+        %a.right.carousel-control{"data-slide" => "next", href: "#carousel-generic"}
+          %span.glyphicon.glyphicon-chevron-right
+
+:javascript
+  $(document).ready(function () {
+      $("#map-loader .image").css("display", "block");
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showLocation, showError);
+      } else {
+          alert("Geolocation is not supported by this browser.")
+      }
+
+      var params = getHashParams();
+
+      if (typeof params.key == "undefined" && typeof params.cuisine == "undefined" && typeof params.delivery == "undefined" && typeof params.filter == "undefined") {
+
+        console.log("Empty");
+      } else {
+
+        console.log(params.key + " " + params.cuisine + " " + params.delivery + " " + params.filter );
+
+          $("#name").val(params.key);
+          $("#cuisine").val(params.cuisine);
+
+          if (params.delivery == 1) {
+              $("#delivery_1").prop('checked', true);
+          } else {
+              $("#delivery_0").prop('checked', true);
+          }
+
+
+          if (params.filter == "" || params.filter == null) {
+              params.filter = 0;
+          }
+          $("#togle-buttons  button").removeClass("active");
+          $("#togle-buttons button[data-filter='" + params.filter + "']").addClass("active");
+
+
+          if (localStorage.getItem("rest-data") != null && localStorage.getItem("rest-data") != "") {
+              if (localStorage.getItem("keyword") == params.key
+                  && localStorage.getItem("cuisine") == params.cuisine
+                  && localStorage.getItem("delivery") == params.delivery
+                  && localStorage.getItem("filter") == params.filter)  {
+
+                  $('#restaurant_list').html(localStorage.getItem("rest-data"));
+              } else {
+                  loadData();
+              }
+          } else {
+              //loadData();
+          }
+
+      }
+
+  });

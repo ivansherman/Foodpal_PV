@@ -1,0 +1,245 @@
+// Place all the styles related to the order controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.order-form {
+
+  .field {
+    margin: 10px 0;
+  }
+
+  .styled-select {
+
+  }
+
+  h4 {
+    font-size: 17px;
+    &.green {
+      color: #94CA74;
+      display: block;
+      float: left;
+      width: 100%;
+      font-size: 17px;
+      font-style: normal;
+      font-weight: 600;
+      padding: 0;
+      margin: 5px 0 0;
+    }
+  }
+
+  .attantion {
+    text-align: center;
+    color: red;
+  }
+
+  label {
+    width: 100%;
+
+    display: block;
+    float: left;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
+
+    &.green {
+      color: #94CA74;
+    }
+  }
+
+  textarea, input[type="text"] {
+    border: 1px solid #94CA74;
+  }
+
+  textarea {
+    width: 100%;
+    height: 130px;
+  }
+
+  input[type="submit"] {
+    margin: 0 auto 20px auto;
+
+  }
+
+  .checkboxed {
+    padding: 5px 0 15px 0;
+  }
+
+}
+
+.post {
+  padding: 20px 0;
+  overflow: auto;
+
+  input[type=submit].green {
+    float: right;
+    padding: 5px 10px;
+  }
+
+  h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #94ca17;
+    text-transform: uppercase;
+    line-height: normal;
+    margin-bottom: 5px;
+
+  }
+
+  label {
+    display: block;
+    margin: 0 10px;
+  }
+
+  input[type=text] {
+    margin: 0 0 10px 0px;
+    width: 100%;
+  }
+
+  .label {
+    margin: 5px;
+  }
+
+  input.string {
+    font-size: 14px;
+    color: #428bca;
+    border: 0;
+    background: 0;
+    box-shadow: none;
+    float: none;
+
+  }
+
+  .fieldset {
+    h2 {
+      font-size: 17px;
+      color: #2A952A;
+    }
+  }
+}
+
+@media(min-width: 300px) and(max-width: 660px) {
+  .small-screen-none {
+    display: none;
+  }
+
+  .switch-block-wrap {
+    width: auto;
+  }
+
+  .col-xs-6 {
+    width: 100%;
+  }
+  .conteiner {
+    width: auto;
+  }
+
+}
+
+table.table tr.clickable {
+
+  cursor: pointer;
+  &:hover {
+    background: #c9e2b3;
+  }
+
+}
+
+.order_info {
+
+  .card {
+    position: absolute;
+    font-size: 46px;
+    border-radius: 10px;
+    padding: 15px;
+    width: 300px;
+    text-align: center;
+    font-weight: bold;
+    right: -5px;
+//    top: 15px;
+    transform:rotate(45deg);
+    -ms-transform:rotate(45deg);
+    -webkit-transform:rotate(45deg);
+
+  }
+  img {
+    margin: 0 10px 10px 0;
+
+    &.avatar {
+      float: left;
+      margin-top: 5px;
+    }
+  }
+  h1 {
+    font-size: 36px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .fieldset {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px auto 20px auto;
+
+    legend {
+      display: inline;
+      width: auto;
+      padding: 5px 20px;
+      border: 0;
+      margin: 0;
+      color: #cacaca;
+
+    }
+  }
+
+  th {
+    font-size: 17px;
+    max-width: 250px;
+    padding-bottom: 15px;
+  }
+
+  td {
+    padding-left: 15px;
+    font-size: 14px;
+    vertical-align: top;
+  }
+
+  table.products {
+    width: 100%;
+    img {
+      border-radius: 5px;
+      margin: 3px 0 10px 0;
+    }
+
+    tr:nth-child(2n) {
+      background: #E5EDDD;
+    }
+
+    tr {
+      td:nth-child(1) {
+        margin: 0;
+        padding: 0;
+      }
+    }
+
+    td {
+      vertical-align: middle;
+      font-size: 16px;
+    }
+
+    tr:last-child {
+      background: none;
+
+      td:last-child {
+        background: #f7e1b5;
+        padding: 15px;
+      }
+    }
+
+  }
+
+}

@@ -1,0 +1,30 @@
+= form_for @menu, url: "/menus/create", :html => { :id => "addMenuForm" } do |form|
+  - if @menu.errors.messages
+    - @menu.errors.messages.each do |key, mes|
+      = key
+      \:
+      = mes
+
+  .modal-header
+    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+    %h4#myModalLabel.modal-title Add Menu
+  .modal-body{style: "max-height: 414px;overflow: auto;"}
+    .writing.gallery
+      %img(src="/assets/writing.gif" ){style: "margin: 0 auto"}
+    .form
+      .field
+        = form.label :name
+        = form.text_field :name, class: "required"
+        = form.hidden_field :restaurant_id, :value => @restaurant.id.to_s
+        = form.hidden_field :id, :value => @menu.id.to_s if @menu
+      .field
+        = form.label :description
+        = form.text_area :description
+
+  .modal-footer
+    = form.submit "Add menu", class: "btn btn-success"
+
+  :javascript
+    $(document).ready(function(){
+      $('#addMenuForm').validate();
+    })

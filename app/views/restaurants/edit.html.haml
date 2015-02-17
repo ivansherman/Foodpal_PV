@@ -1,0 +1,170 @@
+.content
+  .loading.restaurant
+    %img(src="/assets/loading.gif" ){style: "margin: 0 auto"}
+
+  - if @restaurant
+
+    .post.restaurant
+
+      = form_for @restaurant, url: restaurant_path(@restaurant), method: "PUT" do |form|
+        .row{style: "margin: 0"}
+          .col-xs-10
+            %h1
+              = link_to image_tag("/assets/DeleteRed.png", :style => "width: 24px"), restaurant_path(@restaurant), method: "delete", data: {:confirm => "Are you shure? o_O"}
+              Edit
+              = "\"" + @restaurant.name + "\""
+          .col-xs-2
+            = form.submit "Save Changes", class: "btn btn-success"
+
+
+
+
+        .row
+          .col-xs-5
+            .field{style: "text-align: center"}
+              = image_tag @restaurant.image.url(:thumb), style: "margin: 10px"
+              = form.file_field :image
+          .col-xs-7
+            .field
+              = form.label :name
+              = form.text_field :name, class: "white textfield required"
+
+        .field
+          = form.label :description
+          = form.text_area :description, class: "white"
+
+        .row
+          .col-xs-6
+
+            .field
+              = form.label :email
+              = form.text_field :email, class: "white email"
+          .col-xs-6
+            .field
+              = form.label :url
+              = form.text_field :url, class: "white url"
+
+        .row
+          .col-xs-6
+            .field
+              = label_tag "Delivery Method"
+              = form.radio_button(:delivery_type, 0, class: "css-checkbox")
+              %label.css-label{for: "restaurant_delivery_type_0"} Both
+
+              = form.radio_button(:delivery_type, 1, class: "css-checkbox")
+              %label.css-label{for: "restaurant_delivery_type_1"} Pick Up
+
+              = form.radio_button(:delivery_type, 2, class: "css-checkbox")
+              %label.css-label{for: "restaurant_delivery_type_2"} Delivery
+
+          .col-xs-6
+            .field
+              = label_tag "Payment Method"
+              = form.radio_button(:payment_type, 0, class: "css-checkbox")
+              %label.css-label{for: "restaurant_payment_type_0"} Both
+
+              = form.radio_button(:payment_type, 1, class: "css-checkbox")
+              %label.css-label{for: "restaurant_payment_type_1"} Cash
+
+              = form.radio_button(:payment_type, 2, class: "css-checkbox")
+              %label.css-label{for: "restaurant_payment_type_2"} Card
+
+        %fieldset.row.fieldset
+          %legend
+            Socials
+
+          .row
+            .col-xs-4
+              = form.label :facebook_url
+              = form.text_field :facebook_url, class: "white url"
+
+            .col-xs-4
+              = form.label :twitter_url
+              = form.text_field :twitter_url, class: "white url"
+
+            .col-xs-4
+              = form.label :g_url
+              = form.text_field :g_url, class: "white url"
+
+
+        %fieldset.row.fieldset
+          %legend
+            Other
+          .other
+            = label_tag "Show restaurant at Free Restaurant Listing Application"
+            = form.radio_button(:list, false, class: "css-checkbox")
+            %label.css-label{for: "restaurant_list_false"} No
+
+            = form.radio_button(:list, true, class: "css-checkbox")
+            %label.css-label{for: "restaurant_list_true"} Yes
+
+      %fieldset.row.fieldset
+        %legend
+          Cuisines
+        .cuisines
+          = render partial: "cuisines/list_by_restaurant", locals: {restaurant: @restaurant}
+
+      %fieldset.row.fieldset
+        %legend
+          Locations
+        .locations
+          = render partial: "locations/list_by_restaurant", locals: {restaurant: @restaurant}
+
+      %fieldset.row.fieldset
+        %legend
+          Menus
+
+        = image_tag("/assets/ImportExcel.bmp", id: "import", style: "float: right");
+
+        %br
+        .menus
+          = render partial: "menus/list", locals: {restaurant: @restaurant}
+
+      %fieldset.row.fieldset
+        %legend
+          Photos
+
+        .gallery
+          = render partial: "gallery/list_by_restaurant", locals: {restaurant: @restaurant}
+
+
+
+  :javascript
+    $(document).ready(function(){
+      $('.edit_restaurant').validate();
+    })
+
+#importMenu.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+        %h4#myModalLabel.modal-title Load Menus from Exel
+      .modal-body{style: "overflow: hidden"}
+        =form_tag(restaurants_import_excel_path({rest_id: @restaurant.id}), :multipart=>true, :method => 'post') do
+          Select an Excel File :
+          = file_field_tag 'excel'
+          = submit_tag 'load', class: 'btn btn-primary btn-success', :id => 'load_excel', :style => "float: right"
+
+#addImage.modal.fade{"aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      - @gallery = Gallery.new
+      = form_for @gallery, url: "/gallery/create", :html => { :id => "imageUploadForm", :multipart => true } do |form|
+        .modal-header
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+          %h4#myModalLabel.modal-title Add Image
+        .modal-body{style: "max-height: 414px;overflow: auto;"}
+          .writing.gallery
+            %img(src="/assets/writing.gif" ){style: "margin: 0 auto"}
+          .form
+            = form.file_field :image, class: "required"
+            = form.hidden_field :restaurant_id, :value => @restaurant.id.to_s
+
+        .modal-footer
+          = form.submit "Add image", class: "btn btn-success"
+
+        :javascript
+          $(document).ready(function(){
+            $('#imageUploadForm').validate();
+          })

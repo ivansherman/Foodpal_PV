@@ -1,0 +1,27 @@
+- menu.products.each do |p|
+  .row.item
+    .col-xs-12
+    .row
+      .col-xs-9
+
+        %a{"data-trigger" => "hover", id: "popover_#{p.id}",
+                    "data-placement" => "bottom", href: "#",
+                    "data-content" => "<img src=\"#{p.image.url}\" style=\"max-width: 150px;\"/><p >#{p.description}</p>",
+                     "data-original-title" => "#{p.name}",
+                     rel: "popover", "data-html" => "true"}
+          %h3
+            = p.name
+          = link_to "add item", line_items_path({product_id: p}), class: 'add-to-cart', "data-id" => p.id
+      .col-xs-3.text-right
+        %b
+          = "$" + p.price
+
+
+  :javascript
+    $("#popover_#{p.id}").popover();
+
+
+
+
+
+

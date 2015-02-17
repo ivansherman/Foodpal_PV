@@ -1,0 +1,136 @@
+%div{style: "background: #94ca74; padding: 25px; "}
+  %div{style: "background: #f4feff; padding: 15px; border-radius: 10px;"}
+    %div{style: ""}
+      = image_tag attachments['logo.png'].url
+    
+    %div{style: "background: #94ca74 url('#{attachments['cutlery.png'].url}') left center no-repeat;border-radius: 30px;font-size:27px;color:#fff;text-transfotm:uppercase; padding:0 40px; margin:20px 0;"}
+      New Order: 
+      = @order.created_at.strftime("\"%m/%d/%Y at %I:%M %p\"") 
+
+    %table{style: "width: 100%"}
+      %tr
+        %td
+          = image_tag attachments['restaurant_logo.png'].url if attachments['restaurant_logo.png']
+        %td
+          %h1{style: "font-size:36px;color:#94ca17;text-transform:uppercase;margin-bottom:5px"}
+            = @location.restaurant.name 
+          %h2{style: "font-size:24px; "}
+            = @location.city.state.state + ", " + @location.city.city + " " + @location.zip.to_s + ", " + @location.address if @location.city
+
+
+    %fieldset{style: "border: 1px solid #CCC; margin: 10px"}
+      %legend{style: "color: #CACACA; padding: 5px 20px;"} 
+        Customer Info
+      %table
+        %tr
+          %th{style: "text-align: left"}
+            Customer Name:
+          %td
+            = @order.user.name
+        %tr
+          %th{style: "text-align: left"}
+            Delivery Address:
+          %td
+            = @order.address
+        %tr
+          %th{style: "text-align: left"}
+            Customer Phone:
+          %td 
+            = @order.phone
+
+    %fieldset{style: "border: 1px solid #CCC; margin: 10px"}
+      %legend{style: "color: #CACACA; padding: 5px 20px;"} 
+        Delivery Instructions
+      %table
+        %tr
+          %th{style: "text-align: left"}
+            Send plastic utensils and paper napkins:
+          %td 
+            = @order.napkins ? "No" : "Yes"
+        %tr 
+          %th{style: "text-align: left"}
+            Send condiments (such as ketchup, salt & pepper packets):
+          %td 
+            = @order.condiments ? "No" : "Yes"
+        %tr
+          %th{style: "text-align: left"}
+            Delivery date and time:
+          %td
+            = @order.delivery_date + " At " + @order.delivery_time
+        %tr
+          %th{style: "text-align: left"}
+            Delivery Method:
+          %td
+            = @order.delivery_type ? "Pick Up" : "Delivery"
+
+    %fieldset{style: "border: 1px solid #CCC; margin: 10px"}
+      %legend{style: "color: #CACACA; padding: 5px 20px;"} 
+        Payment Info
+      %table
+        %tr
+          %th{style: "text-align: left"}
+            Payment Method
+          %td
+            = @order.payment_method ? "Cash" : "Credit Card"
+        - if  !@order.payment_method
+          %tr
+            %th{style: "text-align: left"}
+              Tansaction Id
+            %td
+              = @order.transaction_id
+
+
+    %fieldset.fieldset{style: "border: 1px solid #CCC; margin: 10px"}
+      %legend{style: "color: #CACACA; padding: 5px 20px;"} 
+        Products
+      %table.products{style: "width: 100%"}
+        %tr
+          %th
+          %th{style: "text-align: left"}
+            Item Title
+          %th{style: "text-align: left"}
+            Quantity
+          %th{style: "text-align: left"}
+            Summary Price, $
+          %th
+          - @order.order_items.each_with_index do |item, i|
+            - if i % 2 == 0
+              %tr{style: "background: #E5EDDD"}
+                %td
+                %td
+                  = item.product.name
+                %td
+                  = item.count
+                %td
+                  = "$" + (item.product.price.to_f * item.count.to_f).to_s
+
+            - else    
+              %tr
+                %td
+                %td
+                  = item.product.name
+                %td
+                  = item.count
+                %td
+                  = "$" + (item.product.price.to_f * item.count.to_f).to_s
+        %tr
+          %td
+          %td
+          %td
+          %td
+            - if !@order.delivery_type
+              Delivery:
+              = @order.delivery_type ? "$" + @location.delivery_fee.to_s : "$0.00"
+              %br
+            %br
+            Summary:
+            %b
+              = "$" + @order.totalprice.to_s
+
+
+    %div
+      %a(href="http://foodpal.com/orders/#{@order.id}?security_key=#{@order.success_key}"){style: "padding: 4px 15px;text-decoration: none;background: #68964E;font-size: 18px;color: #ffffff;font-weight: bold;border-radius: 30px;margin: 20px;"}
+        Order Accept
+      %a(href="http://foodpal.com/orders/#{@order.id}?security_key=#{@order.cancel_key}"){style: "padding: 4px 15px;text-decoration: none;background: #FF8182;font-size: 18px;color: #ffffff;font-weight: bold;border-radius: 30px;margin: 20px;"}
+        Order Wrong
+

@@ -1,0 +1,21 @@
+-#%h3
+-#  =loc.restaurant.name
+-#  = link_to 'show', '#', class: 'map-rest-link', id: loc.restaurant.id.to_s
+
+.info-window{style: "line-height:1.35; overflow:hidden; white-space:nowrap; width: 258px; height: 82px"}
+  .photo{style: "float: left; margin-top: 10px"}
+    = image_tag loc.restaurant.image.url(:thumb), style: "width: 50px; height: 50px; margin: 0 10px 10px 0"
+  .info{style: "float: left; width: 198px; height: 80px"}
+    %h1{style: "float: left;width: 198px;white-space: normal; color: #fff; font-size: 16px; margin-bottom: 5px"}
+      = loc.restaurant.name
+    .mapstars{"data-average" => "#{loc.restaurant.rating}", "data-id" => loc.restaurant.id, :id => ("star_" + loc.id.to_s)}
+
+
+    %div{style: "float: left; font-size: 11px; width: 150px; white-space:normal;"}
+      =loc.address
+      %br
+      =loc.phone
+
+
+    .submit{style: "float: right; "}
+      = link_to image_tag("/assets/arrw2.png", style: "width: 40px"), restaurant_path(loc), class: 'map-rest-link', id: loc.restaurant.id.to_s, "data-push" => "true"

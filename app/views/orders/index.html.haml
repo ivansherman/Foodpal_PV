@@ -1,0 +1,145 @@
+:javascript
+  $(document).ready(function(){
+    var price = $('td#total-price').text().replace(/\s/g, '');
+    $('h2.green.price-container').text('Total: ' + price);
+  })
+-current_user = @current_user
+.row
+  .col-xs-6.order-form{style: "min-width: 305px;"}
+    =form_tag payments_payment_path do
+      = hidden_field_tag :location_id, @location.id
+      .block
+        %h1.green 1. DELIVERY INFORMATION
+        .field
+          %h4.green Delivery time period:
+          .attantion
+            Attention! There are limitations in distance delivery.
+            For more information call
+            =@location.phone
+
+        .field
+          %h4.green This is a Delivery order for:
+          %h4
+
+            - address = (current_user.address && current_user.address.city) ? (current_user.address.city.state.state + ", " + current_user.address.city.city + ", " + current_user.address.address) : ""
+            = text_area(:orders, :address, :class => "white", :value => address)
+
+
+        .field
+          = label(:phone, "Phone", class: "green")
+          = text_field(:orders, :phone, :class => "white", :value => current_user.phone)
+
+        .field
+          = label( :instructions, "Instructions", class: "green")
+          = text_area( :orders, :instructions, class: "white")
+
+
+        .field
+          = label_tag "Go Green!", nil, class: "green"
+
+          = check_box(:orders, :napkins, class: "css-checkbox")
+          -#= label(:napkins, "Do not send plastic utensils and paper napkins")
+          %label.css-label{for: "orders_napkins"} Do not send plastic utensils and paper napkins
+        .field
+          = check_box(:orders, :condiments, class: "css-checkbox")
+          -#= label(:condiments, "Do not send condiments (such as ketchup, salt & pepper packets)")
+          %label.css-label{for: "orders_condiments"} Do not send condiments (such as ketchup, salt & pepper packets)
+
+        .field
+          = label_tag "Delivery date and time", nil, class: "green"
+
+          .row{style: "padding: 0 5px"}
+            .col-xs-7{style: "width: 245px; padding: 10px"}
+              .styled-select
+                - days = [["As Soon As Possible", "As Soon As Possible"]]
+                - for i in 0..5
+                  - day = Date.current+i
+                  - days << [day.strftime("%A, %b %d "), day.strftime("%A, %b %d ")]
+
+                = select(:orders, :delivery_date, options_for_select(days, "As Soon As Possible"))
+
+            .col-xs-1{style: "width: 30px;padding: 15px 1px 5px 15px"}
+              %p{style: "font-size: 17px; font-weight: bold;"} AT
+            .col-xs-4{style: "width: 159px; padding: 10px"}
+              .styled-select
+                = time_select :orders, :delivery_time, { :combined => true, :default => Time.now.change(:hour => 12),
+                                                :simple_time_select => true, :minute_interval => 15,
+                                                :time_separator => "", :start_hour => 12, :end_hour => 22, ampm: true }
+        .field
+          = label(:delivery_type, "Delivery type", class: "green")
+          .styled-select{style: "width: 230px"}
+            %select#orders_delivery_type(name="orders[delivery_type]")
+              -if @location.restaurant.delivery_type == 0 || @location.restaurant.delivery_type == 2
+                %option(value="true" ) Pick Up
+              -if @location.restaurant.delivery_type == 0 || @location.restaurant.delivery_type == 1
+                %option(value="false" ) Delivery
+
+
+      .block
+        %h1.green 2. SELECT PAYMENT(S)
+
+        %h2.green.price-container
+          - sum = 0
+          - @cart.line_items.map{|line_item| sum += (line_item.product.price.to_f * line_item.quantity.to_i).to_f}
+          TOTAL: $
+          = sprintf('%.2f', (@location.delivery_fee.to_f + sum))
+
+
+        .checkboxed
+          - unless @location.restaurant.payment_type == 2
+
+            .field{style: "overflow:hidden"}
+              = radio_button(:orders, :payment_method, true, checked: true, class: "css-checkbox")
+              %label.css-label{for: "orders_payment_method_true"} Cash
+
+          - unless @location.restaurant.payment_type == 1
+            - checked = true if @location.restaurant.payment_type == 2
+            .field
+              = radio_button(:orders, :payment_method, false, checked: checked, class: "css-checkbox")
+              %label.css-label{for: "orders_payment_method_false"} Credit Card
+
+
+        .card-block
+          .field
+            = label(:name, "Cardholder Name", class: "green")
+            = text_field(:card, :name, class: "white" )
+
+          .field
+            = label(:last_name, "Cardholder Last name", class: "green")
+            = text_field(:card, :last_name, class: "white")
+
+          .field
+            = label(:card_number, "Credit Card Number", class: "green")
+            = text_field(:card, :card_number, class: "white")
+
+          = label(:code, "CVV Security Code", class: "green")
+          = text_field(:card, :code, class: "white")
+
+          = label(:month, "Expiration Month", class: "green")
+          .styled-select{style: "width: 230px"}
+            = date_select(:card, :month, :discard_day => true, :discard_year => true)
+
+          = label(:year, "Expiration Year", class: "green")
+          .styled-select{style: "width: 230px"}
+            = date_select(:card, :year, :start_year => Time.now.year, :discard_day => true, :discard_month => true)
+
+
+      .block{style: "overflow: hidden"}
+        %h1.green 3. AGREEMENTS
+        .field
+          = check_box_tag :correct, true, false, class: "css-checkbox"
+          -#= label_tag "Order and Delivery location is correct."
+          %label.css-label{for: "correct"} Order and Delivery location is correct.
+        .field
+          = check_box_tag(:agree, true,  false, class: "css-checkbox")
+          %label.css-label{for: "agree"} I have read, understood and accept the #{link_to "Terms and Agreements", privacy_policy_path, :target => "_blank"} of Foodpal.
+
+      = submit_tag "Place Order", class: "big gray", id: "order_button", disabled: true
+
+  .col-xs-6#cart-container{style: "min-width: 305px;"}
+    = render partial: 'restaurants/cart', locals: {location: @location}
+
+#addToCart.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    - product = Product.new
+    = render partial: 'carts/edit', locals: {product: product, cart: @cart}

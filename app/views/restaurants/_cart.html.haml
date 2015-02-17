@@ -1,0 +1,116 @@
+- restaurant = (location)? location.restaurant : @restaurant
+
+-#- @new_items = []
+-#- @cart.line_items.each_with_index do |it, i|
+-#  - if it.product.menu.restaurant.id == restaurant.id
+-#    - @new_items[i] = it
+
+#cart
+  %h1
+    My Order
+    %img(src="/assets/order.png")
+  .cart-inner
+    .rest-info.green-bottom
+      .row
+        .col-xs-3{style: 'min-width: 100px;'}
+
+          = image_tag restaurant.image.url(:thumb)
+        .col-xs-9
+          %h1
+            = restaurant.name
+          .row
+            .col-xs-7
+              %h2
+                Subtotal: $
+                %span
+                  - sum = 0
+                  - @cart.line_items.map{|line_item| sum += (line_item.product.price.to_f * line_item.quantity.to_i).to_f}
+                  = sprintf('%.2f', sum)
+              %h2
+                Item(s):
+                %span
+                  - count = 0
+                  - @cart.line_items.map{|line_item| count += line_item.quantity.to_i}
+                  = count
+            .col-xs-5
+              - if current_user
+                - if Rails.application.routes.recognize_path(request.referrer)[:controller] == "restaurants" && params[:controller] != "orders" && !@cart.line_items.blank?
+                  = link_to "Check out", orders_index_path, class: "big standart"
+               
+              - else
+                %a(href="#registration"){"onclick" => "$('#collapseOne').collapse('show')", class: "big standart"}
+                  Login
+
+    .row
+      .col-xs-12
+        -#= render partial: 'cart'
+
+        -if @cart.line_items.blank?
+          You haven't added any items yet!
+        -else
+          %div{id: @cart.id, style: 'display: none;', class: 'cart_id'}
+          %table{style: "width: 100%"}
+            - @cart.line_items.each do |item|
+
+              %tr
+                %td
+                  = item.quantity
+                %td{style: 'padding: 0 10px 0 10px;'}
+                  =  item.product.name unless item.product.nil?
+
+                %td{style: 'padding: 5px;'}
+                  = link_to 'edit', '#', id: item.id, class: 'edit-from-card btn btn-danger ', "data-id" => item.product.id, "data-cart_id" => @cart.id
+                %td{style: 'min-width: 61px;'}
+
+                  $
+                  = sprintf('%.2f', item.product.price.to_f * item.quantity)
+              %tr
+                %td{style: "height: 20px"}
+                %td
+                %td
+                %td
+            %tfoot
+              %tr
+                %th
+
+                %th
+
+                %th
+                  Subtotal:
+                %td
+                  $
+                  = sprintf('%.2f', sum)
+              %tr
+                %th
+
+                %th
+
+                %th
+                  Delivery Fee:
+                %td
+                  $
+                  = sprintf('%.2f', location.delivery_fee.to_f)
+
+              %tr
+                %th
+
+                %th
+
+                %th
+                  Total:
+                %td#total-price
+                  $
+                  = sprintf('%.2f', (location.delivery_fee.to_f + sum))
+
+
+
+
+
+
+
+
+
+
+
+
+
